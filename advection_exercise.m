@@ -17,9 +17,9 @@ tau=input('Enter timestep');
 method=menu('Numerical method:','FTCS','Lax','Upwind','Lax Wendroff');
 
 a = zeros(N+1,1);       % Numerical solution vector
-ii = 1:N;               % Index counters
-ip = _____;
-im = _____;
+xi = 1:N;               % Index counters
+xp = _____;
+xm = _____;
 
 % Define initial pulse
 a = 1./cosh(5*x.^2/h).^2; 
@@ -34,13 +34,13 @@ coeff_ftcs = -c*tau/(2.*h);
 istep = 1;
 while(istep <= 300)
     if( method == 1 )      % FTCS method %
-        a(ii) = a(ii) + coeff_ftcs*(a(ip)-a(im));  
+        a(xi) = a(xi) + coeff_ftcs*(a(xp)-a(xm));  
     elseif( method == 2 )  % Lax method
-        %a(ii) = 
+        %a(xi) = 
     elseif( method == 3 )  % Upwind method
-        %a(ii) = 
+        %a(xi) = 
     else                   % Lax-Wendroff method
-        %a(ii) =  
+        %a(xi) =  
     end   
     istep = istep + 1;
     plot(x,a,'-o'); ylim([-1 1.5]); xlim([-0.5,0.5])
