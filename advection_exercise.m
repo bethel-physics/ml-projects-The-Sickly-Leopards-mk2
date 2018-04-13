@@ -31,7 +31,8 @@ plot(x,a,'-o'); ylim([-1,1.5]);
 pause;
 
 coeff_ftcs = -c*tau/(2.*h);
-while(1)
+istep = 1;
+while(istep <= 300)
     if( method == 1 )      % FTCS method %
         a(ii) = a(ii) + coeff_ftcs*(a(ip)-a(im));  
     elseif( method == 2 )  % Lax method
@@ -41,6 +42,7 @@ while(1)
     else                   % Lax-Wendroff method
         %a(ii) =  
     end   
+    istep = istep + 1;
     plot(x,a,'-o'); ylim([-1 1.5]); xlim([-0.5,0.5])
     pause(0.05);
 end
