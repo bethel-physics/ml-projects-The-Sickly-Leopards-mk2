@@ -33,3 +33,5 @@ To submit your quiz:
   * commit your new version of <tt>advection_exercise.m</tt> with the message "Quiz 2 take-home code"
   * commit the two figures of displacement vs time
   * commit a paragraph assessing the numerical simulation results for the different cases and methods (either here at the bottom of the README or in a text file).
+
+For the first case, all three methods seem to give the same result, a stable wave. For case two however, they give varied results. For both the Lax and Upwind they spread out overtime. The Lax-windroff added a smaller following wave as time continued meaning that none of these methods worked very well in case 2.
