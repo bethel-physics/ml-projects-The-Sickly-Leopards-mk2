@@ -1,0 +1,95 @@
+% Projectile Motion:
+% Program to compute the 2D projectile of a baseball using
+% the Euler, Euler-Cromer, and Midpoint methods.
+%
+clear, clc
+% Initial conditions
+x0=[0 0 0];
+theta = input('angle from home: ');
+theta=theta*pi/180;
+phi = input('launch angle: ');
+phi = phi * pi/180;
+spin = input('Spin of baseball (RPM): ');
+omega = spin * 0.104547;     %spin in rad/s;
+
+spinselect = menu('Use Spin?','Spin', 'No Spin');
+if(spinselect==1)
+    spinyn=1;
+    magnus = menu('Type of Spin', 'Topspin', 'Backspin');
+    if(magnus==1)
+        mdirection = -1;
+    else
+        mdirection = 1;
+    end
+else
+    spinyn=0;
+    mdirection = 0;
+end
+v0=45;
+v0=[v0*cos(theta)*cos(phi) v0*sin(theta)*cos(phi) v0*sin(phi)];
+x=x0;
+v=v0;
+state=[x v];
+time=0;
+% method=menu('Numerical method','Midpoint','Runge Kutta','Adaptive Runge Kutta');
+% Other parameters
+grav=[0,0,-9.8];         % acceleration of gravity
+cd = 0.35;             % drag coefficient
+r  = .037;             % radius of baseball
+area = pi*r*r;         % frontal area of baseball
+mass = 0.145;          % mass of baseball
+rho = 1.2;             % air density
+tau=0.1;               % time step size
+dat=[time x v];        % solution matrix
+dragconst=0.5*cd*rho*area/mass;
+adaptErr=5e-4;
+b = .00041;              %spin constant S/m
+%fmagnus=[0 0 3];
+%
+counter = 0;
+while(x(3)>=0 & counter<10000)         % repeat until the projectile hits the ground
+    counter = counter + 1;
+%     if(method==1)      % Midpoint
+        fmagnus = [0 0 b * omega * sqrt(v(1)^2+v(2)^2)];
+        accel = grav -dragconst*v*norm(v) + (spinyn*mdirection * fmagnus);
+        vnew = v + tau*accel;
+        x = x + tau*0.5*(v+vnew);
+        v = vnew;
+        time = time + tau;
+        
+%     elseif(method==2)  % Runge Kutta
+%         state = rk4(state, time, tau, @derivsProj, [dragconst grav]);    % Call rk4
+%         x = [state(1) state(2) state(3)];   % 4th order Runge-Kutta
+%         v = [state(4) state(5) state(6)];
+%         time = time + tau; 
+%     else               % Adaptive Runge Kutta
+%         [state, time, tau] = rka(state, time, tau, adaptErr, @derivsProj, [dragconst grav]); % Call rka
+%         x = [state(1) state(2)];   % 4th order Runge-Kutta
+%         v = [state(3) state(4)];
+%         
+%     end
+    dat=[dat;time x v];
+end
+%
+% if(method==1)
+    col='k-';
+% elseif(method==2)
+%     col='bp';
+% else
+%     col='rd';
+% end
+% subplot(221)
+% plot(dat(:,1),dat(:,5),col)
+% xlabel('time (sec)'), ylabel('v_x (m/s)')
+% hold on
+% subplot(222)
+% plot(dat(:,1),dat(:,6),col)
+% xlabel('time (sec)'), ylabel('v_y (m/s)')
+% hold on
+% subplot(212)
+plot3(dat(:,2),dat(:,3),dat(:,4),col)
+grid on
+xlabel('x (m)'), ylabel('y (m)')
+axis([-100 100 0 200 0 100])
+hold on
+%legend('Midpoint','Runge-Kutta','Adaptive Runge-Kutta', 'location', 'best')
